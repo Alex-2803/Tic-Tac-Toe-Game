@@ -1,0 +1,107 @@
+<!-- Main container -->
+<div class="min-h-screen bg-gray-900 text-white p-4 flex flex-col items-center justify-center space-y-8 md:flex-row md:space-y-0 md:space-x-16 lg:space-x-24">
+
+  <!-- Game Board Section -->
+  <div class="flex flex-col items-center space-y-8">
+
+    <!-- Game Title and Turn Info -->
+    <div class="text-center">
+      <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-2">
+        Tic Tac Toe
+      </h1>
+
+      <!-- Show current turn or winner message -->
+      <p class="text-gray-400">
+        @if (!winner) {
+          <!-- Show current player if game not over -->
+          Current turn: 
+          <span class="font-bold text-blue-400">{{ currentPlayer }}</span>
+        } @else {
+          @if (winner === 'Draw') {
+            <!-- Show draw message -->
+            <span class="text-yellow-400 font-bold">It's a draw!</span>
+          } @else {
+            <!-- Show winner message -->
+            <span class="text-green-400 font-bold">Player {{ winner }} wins!</span>
+          }
+        }
+      </p>
+    </div>
+
+    <!-- Board Grid: 3x3 layout -->
+    <div class="grid grid-cols-3 gap-3 w-[280px] sm:w-[340px] md:w-[380px]">
+
+      <!-- Loop through the board array -->
+      @for (cell of board; track $index) {
+         <!-- Handle player move on click -->
+        <button
+          (click)="handleSwitchClick($index)" 
+
+          class="aspect-square w-full rounded-lg border-2 border-gray-700 text-4xl font-bold text-blue-400
+                 hover:border-blue-500 hover:bg-blue-900/20 transition-all duration-200 active:scale-95
+                 flex items-center justify-center shadow-lg
+                 {{ winningLine.includes($index) ? 'bg-green-500/30 border-green-400' : '' }}"
+        >
+          <!-- Show X or O in the button -->
+          {{ cell }}
+        </button>
+      }
+    </div>
+
+    <div class="flex gap-4">
+      <!-- Start a new round -->
+      <button 
+        (click)="resetGame()" 
+        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-full font-semibold text-white transition-all active:scale-95 shadow-lg">
+        Next Round
+      </button>
+
+      <!-- Reset everything -->
+      <button 
+        (click)="resetAll()" 
+        class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-full font-semibold text-white transition-all active:scale-95 shadow-lg">
+        Reset All
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Stats Section -->
+  <div class="bg-gradient-to-br from-blue-900/80 to-blue-800/80 rounded-xl shadow-2xl p-6 w-72 backdrop-blur-sm border border-blue-700/50">
+    
+    <!-- Section Title -->
+    <h2 class="text-3xl font-bold text-center text-white mb-6 pb-2 border-b border-slate-500">
+      Game Stats
+    </h2>
+
+    <!-- Display player scores and draws -->
+    <div class="space-y-4">
+      <div class="flex justify-between items-center">
+        <span class="text-lg text-gray-300">Player X</span>
+        <span class="text-xl font-bold text-blue-400 bg-blue-900/50 px-3 py-1 rounded-full">{{ scoreX }}</span>
+      </div>
+
+      <div class="flex justify-between items-center">
+        <span class="text-lg text-gray-300">Player O</span>
+        <span class="text-xl font-bold text-blue-400 bg-blue-900/50 px-3 py-1 rounded-full">{{ scoreO }}</span>
+      </div>
+
+      <div class="flex justify-between items-center">
+        <span class="text-lg text-gray-300">Draws</span>
+        <span class="text-xl font-bold text-gray-400 bg-blue-900/50 px-3 py-1 rounded-full">{{ draws }}</span>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="mt-8 pt-4 border-t border-slate-500">
+      <p class="text-center text-sm text-gray-400">Best of 5</p>
+
+      <div class="w-full bg-gray-700 rounded-full h-2 mt-2">
+        <!-- Progress bar fill -->
+        <div 
+          class="bg-blue-500 h-2 rounded-full transition-all duration-300" 
+          [style.width]="progressPercent">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
